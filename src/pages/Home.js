@@ -1,35 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { useProducts } from "../context/ProductProvider";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  const {
-    state: { products, loading, error },
-  } = useProducts();
+  const [products, setProducts] = useState([]);
 
-  let content;
+  useEffect(() => {
+    fetch("products.json")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
 
-  if (loading) {
-    content = <p>Loading...</p>;
-  }
+  const state = useSelector((state) => state);
 
-  if (error) {
-    content = <p>Something went wrong</p>;
-  }
-
-  if (!loading && !error && products.length === 0) {
-    content = <p>Nothing to show, product list is empty</p>;
-  }
-
-  if (!loading && !error && products.length) {
-    content = products.map((product) => (
-      <ProductCard key={product.id} product={product} />
-    ));
-  }
-
+  console.log(state);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl gap-14 mx-auto my-10">
-      {content}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-14 mx-auto my-10">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
     </div>
   );
 };

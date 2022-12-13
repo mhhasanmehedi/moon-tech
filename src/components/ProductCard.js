@@ -1,10 +1,11 @@
 import React from "react";
 import { BiListPlus } from "react-icons/bi";
-import { useProducts } from "../context/ProductProvider";
-import { actionTypes } from "../state/ProductState/actionTypes";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/actionCreators/productActions";
 
 const ProductCard = ({ product }) => {
-  const { dispatch } = useProducts();
+  const dispatch = useDispatch();
+
   return (
     <div className="shadow-lg rounded-3xl border  p-3 flex flex-col text-indigo-900">
       <div className="h-52 w-52 mx-auto">
@@ -15,15 +16,17 @@ const ProductCard = ({ product }) => {
       <div className=" flex-1">
         <ul className="space-y-2">
           {product.keyFeature.map((feature) => {
-            return <li className="text-sm ">{feature}</li>;
+            return (
+              <li className="text-sm " key={feature}>
+                {feature}
+              </li>
+            );
           })}
         </ul>
       </div>
       <div className="flex gap-2 mt-5">
         <button
-          onClick={() =>
-            dispatch({ type: actionTypes.ADD_TO_CART, payload: product })
-          }
+          onClick={() => dispatch(addToCart(product))}
           className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
         >
           Add to cart
